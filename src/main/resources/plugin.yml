@@ -1,0 +1,68 @@
+api-version: '1.14'
+author: Epicnicity322
+depend: [ EpicPluginLib ]
+main: com.epicnicity322.silktouchplus.SilkTouchPlus
+name: SilkTouchPlus
+softdepend: [ HolographicDisplays ]
+version: 1.0
+
+commands:
+  silktouchplus:
+    aliases: [ stp ]
+    description: SilkTouchPlus main command.
+    permission: epicscheduler.help
+
+permissions:
+  silktouchplus.admin:
+    description: All permissions of SilkTouchPlus.
+    default: op
+    children:
+      silktouchplus.player: true
+      silktouchplus.combine: true
+      silktouchplus.help: true
+      silktouchplus.command.*: true
+
+  silktouchplus.player:
+    description: Default player permissions for getting spawners if they're broken with the right tool.
+    default: true
+    children:
+      silktouchplus.drop.*: true
+      silktouchplus.changetype.*: true
+      silktouchplus.hologram: true
+      silktouchplus.special: true
+
+  silktouchplus.combine:
+    description: Allows players to combine Silk Touch books in anvil to make Silk Touch II.
+    default: false
+
+  silktouchplus.drop.*:
+    description: Spawners of all types will be dropped when broken.
+    default: false
+
+  silktouchplus.drop.exampletype:
+    description: Spawners of this type only will be dropped when broken. Replace exampletype with the spawner mob type.
+    default: false
+
+  silktouchplus.changetype.*:
+    description: Spawners can have their mob spawn type changed to any type.
+    default: false
+
+  silktouchplus.changetype.exampletype:
+    description: Spawners can have their mob spawn type changed only to this type. Replace exampletype with the spawner mob type.
+    default: false
+
+  silktouchplus.help:
+    description: Allows use of /silktouchplus
+    default: false
+
+  silktouchplus.command.changetype:
+    description: Allows use of changetype command
+    default: false
+
+  silktouchplus.command.give:
+    description: Allows use of give command
+    default: false
+
+  silktouchplus.command.reload:
+    description: Allows use of reload command
+    default: false
