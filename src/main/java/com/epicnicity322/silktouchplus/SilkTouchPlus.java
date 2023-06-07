@@ -315,7 +315,11 @@ public final class SilkTouchPlus extends JavaPlugin {
                 "# Use it to prevent spawners from spawning unwanted mob types.\n" +
                 "Spawn Whitelist:\n" +
                 "#- 'BLAZE'\n" +
+                "#- 'CAVE_SPIDER'\n" +
+                "#- 'MAGMA_CUBE'\n" +
+                "#- 'SILVERFISH'\n" +
                 "#- 'SKELETON'\n" +
+                "#- 'SPIDER'\n" +
                 "#- 'ZOMBIE'");
         private static final @NotNull ConfigurationHolder langEN_US = new ConfigurationHolder(folder.resolve("Language").resolve("Language EN-US.yml"), "" +
                 "General:\n" +
