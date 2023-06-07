@@ -43,7 +43,7 @@ import java.util.Optional;
 
 public final class SpawnerClickListener implements Listener {
     private final @NotNull SilkTouchPlus plugin;
-    double lootRepairAmount = 0.00025;
+    double lootRepairAmount = 0.0010;
     @NotNull String formattedLootRepairAmount = SilkTouchPlusUtil.formatHealth(lootRepairAmount);
     double specialRepairAmount = 2.0;
     @NotNull String formattedSpecialRepairAmount = SilkTouchPlusUtil.formatHealth(specialRepairAmount);

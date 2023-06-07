@@ -180,10 +180,18 @@ public final class SilkTouchPlus extends JavaPlugin {
             manager.registerEvents(spawnerInventory, this);
         }
 
+        spawnerSpawn.setSpawnWhitelist(config.getCollection("Spawn Whitelist", obj -> {
+            try {
+                return EntityType.valueOf(obj.toString());
+            } catch (IllegalArgumentException e) {
+                logger.log("Unknown entity type '" + obj + "' from Spawn Whitelist setting.");
+                return null;
+            }
+        }));
         spawnerSpawn.setSpawnDamage(config.getNumber("Health.Spawn Damage").orElse(0.0005).doubleValue());
         manager.registerEvents(spawnerSpawn, this);
 
-        spawnerClick.setLootRepairAmount(config.getNumber("Health.Loot Repair Amount").orElse(0.00025).doubleValue());
+        spawnerClick.setLootRepairAmount(config.getNumber("Health.Loot Repair Amount").orElse(0.0010).doubleValue());
         spawnerClick.setSpecialRepairAmount(config.getNumber("Health.Special Repair Item.Repair Amount").orElse(2.0).doubleValue());
         spawnerClick.setMaxRepairHealth(config.getNumber("Health.Max Repair Health").orElse(1.0).doubleValue());
         manager.registerEvents(spawnerClick, this);
@@ -295,13 +303,20 @@ public final class SilkTouchPlus extends JavaPlugin {
                 "    # The amount of health to add to the spawner when the player clicks on it with this item.\n" +
                 "    Repair Amount: 2.0\n" +
                 "  # The amount of health to add to the spawner when the player clicks on it using mob loot.\n" +
-                "  Loot Repair Amount: 0.00025\n" +
+                "  Loot Repair Amount: 0.0010\n" +
                 "  # How much should be the limit for repairing. If the item is a Special Repair Item and it repairs more\n" +
                 "  #than this limit, the health is set to the Special Repair amount, instead of being summed.\n" +
                 "  Max Repair Health: 1.0\n" +
                 "  # If true, only the loot of entities spawned by mob spawners can be used to repair.\n" +
                 "  # If false, loot of all entities killed by a player can be used as repair for spawners.\n" +
-                "  Only Spawner Loot Can Repair: true\n");
+                "  Only Spawner Loot Can Repair: true\n" +
+                "\n" +
+                "# A whitelist of mobs allowed to spawn from spawners.\n" +
+                "# Use it to prevent spawners from spawning unwanted mob types.\n" +
+                "Spawn Whitelist:\n" +
+                "#- 'BLAZE'\n" +
+                "#- 'SKELETON'\n" +
+                "#- 'ZOMBIE'");
         private static final @NotNull ConfigurationHolder langEN_US = new ConfigurationHolder(folder.resolve("Language").resolve("Language EN-US.yml"), "" +
                 "General:\n" +
                 "  No Permission: '&4You don''t have permission to do this.'\n" +

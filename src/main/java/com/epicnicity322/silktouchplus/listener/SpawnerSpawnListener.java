@@ -26,6 +26,7 @@ import com.epicnicity322.silktouchplus.util.HologramHandler;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.CreatureSpawner;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,13 +38,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public final class SpawnerSpawnListener implements Listener {
     private static final @NotNull HashSet<RenderKey> healthRenderingSpawners = new HashSet<>();
     private final @NotNull SilkTouchPlus plugin;
+    private @NotNull Collection<EntityType> spawnWhitelist = Collections.emptySet();
     private double spawnDamage = 0.0005;
 
     public SpawnerSpawnListener(@NotNull SilkTouchPlus plugin) {
@@ -82,12 +82,20 @@ public final class SpawnerSpawnListener implements Listener {
         }
     }
 
+    public void setSpawnWhitelist(@NotNull Collection<EntityType> spawnWhitelist) {
+        this.spawnWhitelist = spawnWhitelist;
+    }
+
     public void setSpawnDamage(double spawnDamage) {
         this.spawnDamage = spawnDamage;
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onSpawnerSpawn(SpawnerSpawnEvent event) {
+        if (!spawnWhitelist.contains(event.getEntityType())) {
+            event.setCancelled(true);
+            return;
+        }
         CreatureSpawner spawner = event.getSpawner();
         PersistentDataContainer container = spawner.getPersistentDataContainer();
         double currentHealth = container.getOrDefault(plugin.spawnerHealth, PersistentDataType.DOUBLE, 1.0);
