@@ -3,14 +3,14 @@ author: Epicnicity322
 depend: [ EpicPluginLib ]
 main: com.epicnicity322.silktouchplus.SilkTouchPlus
 name: SilkTouchPlus
-softdepend: [ HolographicDisplays ]
+softdepend: [ DecentHolograms, HolographicDisplays ]
 version: 1.0
 
 commands:
   silktouchplus:
     aliases: [ stp ]
     description: SilkTouchPlus main command.
-    permission: epicscheduler.help
+    permission: silktouchplus.help
 
 permissions:
   silktouchplus.admin:
@@ -20,7 +20,9 @@ permissions:
       silktouchplus.player: true
       silktouchplus.combine: true
       silktouchplus.help: true
-      silktouchplus.command.*: true
+      silktouchplus.command.changetype: true
+      silktouchplus.command.give: true
+      silktouchplus.command.reload: true
 
   silktouchplus.player:
     description: Default player permissions for getting spawners if they're broken with the right tool.

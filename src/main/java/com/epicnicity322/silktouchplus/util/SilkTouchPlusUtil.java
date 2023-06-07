@@ -42,6 +42,7 @@ public final class SilkTouchPlusUtil {
     }
 
     public static @NotNull String[] separateLines(@NotNull String string) {
+        if (string.isEmpty()) return new String[0];
         return lineSpliterator.split(string);
     }
 }

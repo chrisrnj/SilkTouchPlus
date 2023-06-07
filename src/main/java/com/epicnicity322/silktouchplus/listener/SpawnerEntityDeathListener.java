@@ -131,9 +131,11 @@ public final class SpawnerEntityDeathListener implements Listener {
                 if (meta == null) continue;
 
                 meta.getPersistentDataContainer().set(plugin.repairLoot, PersistentDataType.STRING, type);
-                meta.setLore(Arrays.asList(SilkTouchPlusUtil.separateLines(SilkTouchPlus.getLanguage().getColored("Repair.Loot Lore")
+
+                String[] lines = SilkTouchPlusUtil.separateLines(SilkTouchPlus.getLanguage().getColored("Repair.Loot Lore")
                         .replace("<type>", type).replace("<health>", Double.toString(clickListener.lootRepairAmount))
-                        .replace("<health_percentage>", clickListener.formattedLootRepairAmount))));
+                        .replace("<health_percentage>", clickListener.formattedLootRepairAmount));
+                if (lines.length != 0) meta.setLore(Arrays.asList());
                 drop.setItemMeta(meta);
             }
         }

@@ -1,6 +1,6 @@
 /*
  * SilkTouchPlus - Minecraft Spigot plugin that allows spawners to be obtained with Silk Touch II.
- * Copyright (C) 2022  Christiano Rangel
+ * Copyright (C) 2023  Christiano Rangel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.epicnicity322.silktouchplus.util;
+package com.epicnicity322.silktouchplus.hook;
 
 import com.epicnicity322.silktouchplus.SilkTouchPlus;
+import com.epicnicity322.silktouchplus.util.HologramHandler;
+import com.epicnicity322.silktouchplus.util.SilkTouchPlusUtil;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import org.bukkit.Location;
@@ -29,23 +31,26 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
-public class HologramUtil {
+public final class HolographicDisplaysHook implements HologramHandler {
     private final @NotNull SilkTouchPlus plugin;
     private final @NotNull HashMap<Location, Hologram> holograms = new HashMap<>();
     private boolean enabled = true;
 
-    public HologramUtil(@NotNull SilkTouchPlus plugin) {
+    public HolographicDisplaysHook(@NotNull SilkTouchPlus plugin) {
         this.plugin = plugin;
     }
 
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
+    @Override
     public void createHologram(@NotNull CreatureSpawner spawner, double health) {
         if (!enabled) return;
         Location location = spawner.getLocation();
@@ -54,9 +59,7 @@ public class HologramUtil {
             removeHologram(location);
             return;
         }
-        String[] lines = SilkTouchPlusUtil.separateLines(SilkTouchPlus.getLanguage().getColored("Spawner Hologram")
-                .replace("<type>", spawner.getSpawnedType().name()).replace("<health>", Double.toString(health))
-                .replace("<health_percentage>", SilkTouchPlusUtil.formatHealth(health)));
+        String[] lines = SilkTouchPlusUtil.separateLines(SilkTouchPlus.getLanguage().getColored("Spawner Hologram").replace("<type>", spawner.getSpawnedType().name()).replace("<health>", Double.toString(health)).replace("<health_percentage>", SilkTouchPlusUtil.formatHealth(health)));
 
         if (lines.length == 0 || lines[0].isEmpty()) {
             removeHologram(location);
@@ -69,8 +72,7 @@ public class HologramUtil {
             Location hologramLocation = location.clone().add(0.5, 2.0, 0.5);
             for (Hologram h : HologramsAPI.getHolograms(plugin)) {
                 if (h.getLocation().equals(hologramLocation)) {
-                    hologram = h;
-                    holograms.put(location, hologram);
+                    holograms.put(location, hologram = h);
                     hologram.clearLines();
                     break;
                 }
@@ -84,11 +86,13 @@ public class HologramUtil {
         for (String line : lines) hologram.appendTextLine(line);
     }
 
+    @Override
     public void removeHologram(@NotNull Location location) {
         Hologram hologram = holograms.remove(location);
         if (hologram != null) hologram.delete();
     }
 
+    @Override
     public void clear() {
         holograms.entrySet().removeIf(entry -> {
             entry.getValue().delete();

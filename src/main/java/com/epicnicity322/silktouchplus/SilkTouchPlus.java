@@ -30,8 +30,10 @@ import com.epicnicity322.epicpluginlib.core.util.ObjectUtils;
 import com.epicnicity322.silktouchplus.command.ChangeTypeCommand;
 import com.epicnicity322.silktouchplus.command.GiveCommand;
 import com.epicnicity322.silktouchplus.command.ReloadCommand;
+import com.epicnicity322.silktouchplus.hook.DecentHologramsHook;
+import com.epicnicity322.silktouchplus.hook.HolographicDisplaysHook;
 import com.epicnicity322.silktouchplus.listener.*;
-import com.epicnicity322.silktouchplus.util.HologramUtil;
+import com.epicnicity322.silktouchplus.util.HologramHandler;
 import com.epicnicity322.silktouchplus.util.SilkTouchPlusUtil;
 import com.epicnicity322.yamlhandler.Configuration;
 import org.bukkit.Material;
@@ -63,7 +65,7 @@ public final class SilkTouchPlus extends JavaPlugin {
     private static final @NotNull MessageSender lang = new MessageSender(() -> Configurations.config.getConfiguration().getString("Language").orElse("EN_US"),
             Configurations.langEN_US.getDefaultConfiguration());
     private static @Nullable SilkTouchPlus instance;
-    private static @Nullable HologramUtil hologramUtil;
+    private static @Nullable HologramHandler hologramHandler;
 
     static {
         lang.addLanguage("EN_US", Configurations.langEN_US);
@@ -124,8 +126,8 @@ public final class SilkTouchPlus extends JavaPlugin {
         return item;
     }
 
-    public static @Nullable HologramUtil getHologramUtil() {
-        return hologramUtil;
+    public static @Nullable HologramHandler getHologramHandler() {
+        return hologramHandler;
     }
 
     /**
@@ -149,9 +151,9 @@ public final class SilkTouchPlus extends JavaPlugin {
         Configuration config = Configurations.config.getConfiguration();
 
         SilkTouchPlusUtil.setSeparatorInHealthFormat(config.getString("Health.Decimal Separator").orElse(".").charAt(0));
-        if (hologramUtil != null) {
-            hologramUtil.clear();
-            hologramUtil.setEnabled(config.getBoolean("Holograms").orElse(true));
+        if (hologramHandler != null) {
+            hologramHandler.clear();
+            hologramHandler.setEnabled(config.getBoolean("Holograms").orElse(true));
         }
         instance.loadListeners();
         if (instance.renderTask != null) {
@@ -222,9 +224,22 @@ public final class SilkTouchPlus extends JavaPlugin {
                     (label, sender, args) -> lang.send(sender, lang.get("General.Unknown Command").replace("<label>", label)));
         }
 
-        if (getServer().getPluginManager().getPlugin("HolographicDisplays") != null) {
-            hologramUtil = new HologramUtil(this);
-            logger.log("HolographicDisplays was found and hooked.");
+        if (getServer().getPluginManager().getPlugin("DecentHolograms") != null) {
+            try {
+                hologramHandler = new DecentHologramsHook(this);
+                logger.log("DecentHolograms was found and hooked.");
+            } catch (Throwable t) {
+                logger.log("Could not hook to DecentHolograms:", ConsoleLogger.Level.WARN);
+                t.printStackTrace();
+            }
+        } else if (getServer().getPluginManager().getPlugin("HolographicDisplays") != null) {
+            try {
+                hologramHandler = new HolographicDisplaysHook(this);
+                logger.log("HolographicDisplays was found and hooked.");
+            } catch (Throwable t) {
+                logger.log("Could not hook to HolographicDisplays:", ConsoleLogger.Level.WARN);
+                t.printStackTrace();
+            }
         }
 
         reload();
@@ -254,8 +269,9 @@ public final class SilkTouchPlus extends JavaPlugin {
                 "  # Only players with permission silktouchplus.combine are allowed.\n" +
                 "  Allow Silk Touch Book Combining: true\n" +
                 "\n" +
-                "# Spawners will show holograms when on the ground.\n" +
+                "# Spawners will show holograms when placed.\n" +
                 "# Only player with permission silktouchplus.hologram can crouch and right-click to toggle.\n" +
+                "# Compatible with: HolographicDisplays and DecentHolograms.\n" +
                 "Holograms: true\n" +
                 "\n" +
                 "# A new spawner has 1.0 health max. It gets damage every time a mob is spawned, and can be fed later to\n" +

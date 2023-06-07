@@ -20,7 +20,7 @@ package com.epicnicity322.silktouchplus.listener;
 
 import com.epicnicity322.epicpluginlib.bukkit.lang.MessageSender;
 import com.epicnicity322.silktouchplus.SilkTouchPlus;
-import com.epicnicity322.silktouchplus.util.HologramUtil;
+import com.epicnicity322.silktouchplus.util.HologramHandler;
 import com.epicnicity322.silktouchplus.util.SilkTouchPlusUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -139,9 +139,9 @@ public final class SpawnerClickListener implements Listener {
 
         // When both hands are clear and player is sneaking, toggle the hologram.
         if (player.getInventory().getItemInMainHand().getType().isAir() && player.getInventory().getItemInOffHand().getType().isAir()) {
-            HologramUtil hologramUtil = SilkTouchPlus.getHologramUtil();
+            HologramHandler hologramHandler = SilkTouchPlus.getHologramHandler();
 
-            if (player.isSneaking() && hologramUtil != null && hologramUtil.isEnabled() && player.hasPermission("silktouchplus.hologram")) {
+            if (player.isSneaking() && hologramHandler != null && hologramHandler.isEnabled() && player.hasPermission("silktouchplus.hologram")) {
                 // Checking cooldown for preventing hologram toggling
                 Optional<MetadataValue> lastToggle = player.getMetadata("last_hologram_toggle").stream().findAny();
                 long now = System.currentTimeMillis();
@@ -160,7 +160,7 @@ public final class SpawnerClickListener implements Listener {
 
                 spawnerContainer.set(plugin.hologramEnabled, PersistentDataType.INTEGER, toggle ? 0 : 1);
                 spawner.update();
-                hologramUtil.createHologram(spawner, spawnerContainer.getOrDefault(plugin.spawnerHealth, PersistentDataType.DOUBLE, 1.0));
+                hologramHandler.createHologram(spawner, spawnerContainer.getOrDefault(plugin.spawnerHealth, PersistentDataType.DOUBLE, 1.0));
 
                 if (toggle) {
                     lang.send(player, lang.get("Spawner Hologram Toggle.Disabled"));

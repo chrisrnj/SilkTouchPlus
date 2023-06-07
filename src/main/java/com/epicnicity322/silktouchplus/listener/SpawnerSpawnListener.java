@@ -22,7 +22,7 @@ import com.epicnicity322.epicpluginlib.bukkit.reflection.ReflectionUtil;
 import com.epicnicity322.epicpluginlib.bukkit.reflection.type.PackageType;
 import com.epicnicity322.epicpluginlib.core.util.ObjectUtils;
 import com.epicnicity322.silktouchplus.SilkTouchPlus;
-import com.epicnicity322.silktouchplus.util.HologramUtil;
+import com.epicnicity322.silktouchplus.util.HologramHandler;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.CreatureSpawner;
@@ -60,8 +60,8 @@ public final class SpawnerSpawnListener implements Listener {
         World world = location.getWorld();
         if (world == null) throw new IllegalArgumentException("Location does not specify a world!");
         if (health < 0.0) health = 0.0;
-        HologramUtil hologramUtil = SilkTouchPlus.getHologramUtil();
-        if (hologramUtil != null) hologramUtil.createHologram(spawner, health);
+        HologramHandler hologramHandler = SilkTouchPlus.getHologramHandler();
+        if (hologramHandler != null) hologramHandler.createHologram(spawner, health);
         if (health > 1.0) health = 1.0;
         healthRenderingSpawners.add(new RenderKey(world, location.getBlockX(), location.getBlockY(), location.getBlockZ(), (int) (9.0 - (health * 10.0))));
     }
@@ -71,8 +71,8 @@ public final class SpawnerSpawnListener implements Listener {
                 && key.blockY == location.getBlockY()
                 && key.blockZ == location.getBlockZ()
                 && key.world.equals(location.getWorld()));
-        HologramUtil hologramUtil = SilkTouchPlus.getHologramUtil();
-        if (hologramUtil != null) hologramUtil.removeHologram(location);
+        HologramHandler hologramHandler = SilkTouchPlus.getHologramHandler();
+        if (hologramHandler != null) hologramHandler.removeHologram(location);
     }
 
     public static void renderHealth() {
